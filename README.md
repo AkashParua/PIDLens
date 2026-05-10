@@ -2,6 +2,7 @@
 Annotation tool specially designed for annotating PFDs and PIDs for AutoQRA
 
 ## Features 
+- Everything runs locally, directory based, no upload/download, minimizing latency.
 - Standard 2D annotation of PFDs and PIDs using bounding boxes.
 - Ability to perform pre-processing- thresholding, morphological operations, fillups, resizing etc.
     - Ability to apply transformations both locally in a box and globally.
