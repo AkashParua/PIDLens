@@ -51,7 +51,7 @@ pidlens_project/
 │   ├── ml/                     # Machine Learning & Vision Pipelines
 │   │   ├── __init__.py
 │   │   ├── models/             # Model architectures and Singleton loaders
-│   │   │   ├── rt_detr.py
+│   │   │   ├── rf_detr.py
 │   │   │   └── ocr_engine.py
 │   │   ├── vision/             # Image processing logic
 │   │   │   └── morphology.py   # OpenCV / CUDA transformations

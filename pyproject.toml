@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pidlens"
+version = "0.1.0"
+description = "Fast natively running annotation tool for PFDs and PIDs."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [{ name = "Akash Parua", email = "akash.parua@embitel.com" }]
+dependencies = [
+    "PyQt6>=6.7",
+    "numpy>=1.24",
+    "opencv-python>=4.9",
+    "pyyaml>=6.0",
+    "Pillow>=10.0",
+    "watchdog>=4.0",
+]
+
+[project.optional-dependencies]
+ml = [
+    "rfdetr",
+    "torch",
+    "torchvision",
+]
+dev = [
+    "pytest>=8",
+    "pytest-qt>=4.4",
+    "ruff>=0.5",
+]
+
+[project.scripts]
+pidlens = "pidlens.__main__:main"
+
+[project.gui-scripts]
+pidlens-gui = "pidlens.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["pidlens*"]
+exclude = ["tests*"]
+
+[tool.setuptools.package-data]
+"pidlens.assets" = ["styles/*.qss", "icons/*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
