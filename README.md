@@ -16,6 +16,8 @@ Fast natively running annotation tool.
 - Storing, versioning and evaluating said models.
 - Super fast and ligthweight interface.
 - Load and detect already annotated images, identifies un-annotated images, visualizes annotation.
+- Ability to implement custom pre-processing using scripts and keep a record.
+- Ability to implement curstom Augmentations
 
 ## Directory Structure
 
