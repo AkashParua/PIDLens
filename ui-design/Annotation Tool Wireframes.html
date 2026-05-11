@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Annotation Tool · Wireframes</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+  body { background: #f0eee9; }
+  /* Make the canvas fill the viewport */
+  html, body, #root { height: 100%; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="wf-kit.jsx"></script>
+<script type="text/babel" src="screens-1-3.jsx"></script>
+<script type="text/babel" src="screens-4-6.jsx"></script>
+<script type="text/babel" src="screens-7-9.jsx"></script>
+
+<script type="text/babel">
+const W = 1280, H = 800;
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "fidelity": "clean"
+}/*EDITMODE-END*/;
+
+function App() {
+  const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+
+  // Apply fidelity class globally
+  React.useEffect(() => {
+    document.body.classList.toggle("sketch", tweaks.fidelity === "sketch");
+  }, [tweaks.fidelity]);
+
+  const sections = [
+    { id: "parse",  title: "1 · Parse landing",        sub: "directory picker → detect images / labels",
+      boards: [["a","V1 · drop-zone + recents", Parse_V1], ["b","V2 · file tree + parse preview", Parse_V2], ["c","V3 · stepper · summary cols", Parse_V3]] },
+    { id: "triage", title: "2 · Image triage",         sub: "gallery of annotated vs un-annotated",
+      boards: [["a","V1 · status-badge grid", Triage_V1], ["b","V2 · list + preview", Triage_V2], ["c","V3 · grouped by state", Triage_V3]] },
+    { id: "annot",  title: "3 · Annotation canvas",    sub: "draw / edit bounding boxes",
+      boards: [["a","V1 · classes left · attrs right · thumbstrip", Annot_V1], ["b","V2 · toolbar + crosshair + thumbstrip", Annot_V2], ["c","V3 · floating palettes · max canvas", Annot_V3]] },
+    { id: "pre",    title: "4 · Preprocessing pipeline", sub: "vertical stack of ops · versioned dir output",
+      boards: [["a","V1 · cards · live preview · yaml", Pre_V1], ["b","V2 · step strip + multi-stage previews", Pre_V2], ["c","V3 · each card has in/out preview", Pre_V3]] },
+    { id: "aug",    title: "5 · Augmentation",         sub: "applied at training-time · seeded",
+      boards: [["a","V1 · list + 4×4 sample grid", Aug_V1], ["b","V2 · per-aug row with samples", Aug_V2], ["c","V3 · 3-col card grid", Aug_V3]] },
+    { id: "split",  title: "6 · Train / val / test split", sub: "stratified · class balance check",
+      boards: [["a","V1 · single bar · class table", Split_V1], ["b","V2 · three buckets side-by-side", Split_V2], ["c","V3 · donut + per-class bars", Split_V3]] },
+    { id: "train",  title: "7 · Training loop",        sub: "rf-detr integration · live metrics",
+      boards: [["a","V1 · config left · 4 charts · log", Train_V1], ["b","V2 · KPIs · 2 charts · terminal", Train_V2], ["c","V3 · single-column scroll", Train_V3]] },
+    { id: "models", title: "8 · Model registry / eval", sub: "runs · metrics · per-class",
+      boards: [["a","V1 · runs table + detail", Models_V1], ["b","V2 · model cards grid", Models_V2], ["c","V3 · confusion + PR + worst preds", Models_V3]] },
+    { id: "integ",  title: "9 · Integrations",         sub: "VLM · OCR · detectors · loaders",
+      boards: [["a","V1 · tabs + provider + playground", Integ_V1], ["b","V2 · provider cards", Integ_V2], ["c","V3 · minimal list grouped by kind", Integ_V3]] },
+  ];
+
+  return (
+    <>
+      <DesignCanvas>
+        {sections.map(sec => (
+          <DCSection key={sec.id} id={sec.id} title={sec.title} subtitle={sec.sub}>
+            {sec.boards.map(([id, label, Comp]) => (
+              <DCArtboard key={id} id={`${sec.id}-${id}`} label={label} width={W} height={H}>
+                <Comp />
+              </DCArtboard>
+            ))}
+          </DCSection>
+        ))}
+      </DesignCanvas>
+
+      <TweaksPanel title="Tweaks">
+        <TweakSection title="Fidelity">
+          <TweakRadio
+            label="style"
+            value={tweaks.fidelity}
+            options={[{ value: "clean", label: "Clean" }, { value: "sketch", label: "Sketch" }]}
+            onChange={(v) => setTweak("fidelity", v)}
+          />
+          <div style={{ fontSize: 11, color: "rgba(60,50,40,.6)", marginTop: 6, lineHeight: 1.5 }}>
+            Clean low-fi · thin gray lines, Helvetica.<br/>
+            Sketch · handwritten · wobbly corners.
+          </div>
+        </TweakSection>
+      </TweaksPanel>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
