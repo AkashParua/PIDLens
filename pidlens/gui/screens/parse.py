@@ -5,7 +5,6 @@ from __future__ import annotations
 from pathlib import Path
 
 from PyQt6.QtCore import QDir, Qt
-from PyQt6.QtGui import QFileSystemModel
 from PyQt6.QtWidgets import (
     QFileDialog,
     QHBoxLayout,
@@ -21,6 +20,13 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+
+# QFileSystemModel moved between PyQt6 versions (6.0–6.4: QtWidgets; 6.5+:
+# QtGui). Try both so users on either side work without editing imports.
+try:
+    from PyQt6.QtGui import QFileSystemModel
+except ImportError:
+    from PyQt6.QtWidgets import QFileSystemModel
 
 from pidlens.config import IMAGE_EXTS
 from pidlens.data.workspace import Workspace

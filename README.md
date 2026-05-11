@@ -1,6 +1,44 @@
 # PIDLens
 Fast natively running annotation tool.
 
+## Install & Run
+
+Requires Python 3.10+.
+
+```bash
+python -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+pip install -e .
+python main.py
+```
+
+On WSL you need either WSLg (Windows 11) or an X server (VcXsrv/X410) to see the window.
+
+The ML extras (`rfdetr`, `torch`) are optional. The Training screen ships with a mock loop that emits realistic-looking metrics so the rest of the app can be exercised end-to-end without ML deps. To install them:
+
+```bash
+pip install -e '.[ml]'
+```
+
+## Status
+
+| Screen | Wireframe variant | Status |
+|---|---|---|
+| 1. Parse landing | V2 (file tree + parse preview) | working |
+| 2. Image triage | V1 (status-badge grid) | working |
+| 3. Annotation canvas | V1 (classes/canvas/attrs + thumbstrip) | working — bbox draw/move/resize/delete, autosave to YOLOv8 |
+| 4. Preprocessing pipeline | V3 (in/out preview per card) | working — versioned dirs + meta.yaml |
+| 5. Augmentation | V3 (3-col card grid) | working — saves to `augment.yaml` |
+| 6. Train/val/test split | V3 (donut + per-class bars) | working — stratified, writes train/val/test.txt |
+| 7. Training loop | V2 (KPIs · 2 charts · terminal) | **mock training**; real rf-detr call is one method swap (see `core/workers/ml_worker.py`) |
+| 8. Models / runs | V1 (runs table + detail) | working — reads `runs/`, registers weights into `models/` |
+| 9. Integrations | V3 (list grouped by kind) | shell only — providers raise `NotImplementedError`; configs persist to `integrations.yaml` |
+
+Known stubs to flesh out before production use:
+- `core/workers/ml_worker.py::TrainTask._mock_train` — replace with `rfdetr` invocation.
+- `ml/models/providers.py` — concrete `infer()` for each provider.
+- Workspace watcher is plumbed (`data/watcher.py`) but not yet wired into MainWindow's auto-rescan.
+
 ## Features 
 - Everything runs locally, directory based, no upload/download, minimizing latency.
 - Standard 2D annotation of PFDs and PIDs using bounding boxes.

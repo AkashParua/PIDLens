@@ -15,7 +15,6 @@ from PyQt6.QtWidgets import (
     QMainWindow,
     QStackedWidget,
     QStatusBar,
-    QVBoxLayout,
     QWidget,
 )
 
@@ -105,6 +104,9 @@ class MainWindow(QMainWindow):
         self.workspace_label = QLabel("no workspace")
         self.workspace_label.setObjectName("status-workspace")
         status.addWidget(self.workspace_label)
+        self.status_message = QLabel("")
+        self.status_message.setObjectName("status-message")
+        status.addPermanentWidget(self.status_message)
         self.setStatusBar(status)
 
     def _build_menu(self) -> None:
@@ -130,6 +132,15 @@ class MainWindow(QMainWindow):
         self.sidebar.currentRowChanged.connect(self.stack.setCurrentIndex)
         self.signals.workspaceOpened.connect(self._on_workspace_opened)
         self.signals.requestScreen.connect(self._goto_screen)
+        self.signals.status.connect(self._on_status)
+
+    def _on_status(self, text: str, severity: str) -> None:
+        # Severity drives a CSS class so the QSS can color it (info/warn/error).
+        self.status_message.setText(text)
+        self.status_message.setProperty("severity", severity)
+        # Repolish so QSS attribute-selector updates take effect.
+        self.status_message.style().unpolish(self.status_message)
+        self.status_message.style().polish(self.status_message)
 
     # ──────────────────────────────────────────────────────────
     # actions
