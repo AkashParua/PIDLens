@@ -1,5 +1,5 @@
 # PIDLens
-Annotation tool specially designed for annotating PFDs and PIDs for AutoQRA
+Fast natively running annotation tool.
 
 ## Features 
 - Everything runs locally, directory based, no upload/download, minimizing latency.
